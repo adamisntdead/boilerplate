@@ -9,6 +9,7 @@ const bro = require('gulp-bro')
 const babelify = require('babelify')
 const tinyify = require('tinyify')
 const imagemin = require('gulp-imagemin')
+const cache = require('gulp-cached')
 
 const cssSource = './src/scss/**/*.{scss, sass, css}'
 const cssDest = './dist/css'
@@ -104,6 +105,7 @@ gulp.task('move:watch', () => {
 gulp.task('images', () =>
   gulp
     .src('./src/img/**/*')
+    .pipe(cache('images', { optimizeMemory: true }))
     .pipe(
       imagemin([
         imagemin.jpegtran({ progressive: true }),
