@@ -94,6 +94,12 @@ gulp.task('js:watch', ['js:dev'], () => {
   gulp.watch(jsSource, ['js:dev'])
 })
 
-gulp.task('default', ['css', 'html', 'js'])
-gulp.task('dev', ['css:dev', 'html:dev', 'js:dev'])
-gulp.task('watch', ['css:watch', 'html:watch', 'js:watch'])
+gulp.task('move', () => gulp.src(['./src/*/*', '!./src/{js,scss,inc}/**/*'])
+.pipe(gulp.dest('./dist')))
+
+gulp.task('move:watch', () => {
+  return gulp.watch(['./src/*/*', '!./src/{js,scss,inc}/**/*'], ['move'])
+})
+gulp.task('default', ['css', 'html', 'js', 'move'])
+gulp.task('dev', ['css:dev', 'html:dev', 'js:dev', 'move'])
+gulp.task('watch', ['css:watch', 'html:watch', 'js:watch', 'move:watch'])
