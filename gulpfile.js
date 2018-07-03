@@ -9,71 +9,68 @@ const bro = require('gulp-bro')
 const babelify = require('babelify')
 const tinyify = require('tinyify')
 const imagemin = require('gulp-imagemin')
-const cache = require('gulp-cached')
 
-const cssSource = './src/scss/**/*.{scss, sass, css}'
-const cssDest = './dist/css'
-const htmlSource = './src/*.html'
-const htmlDest = './dist'
-const jsSource = './src/js/**/*.js'
-const jsEntry = './src/js/main.js' // Define a single or series of entry files
-const jsDest = './dist/js'
+const settings = {
+  css: { source: './src/scss/**/*.{scss, sass, css}', dest: './dist/css'},
+  html: { source: './src/*.html', dest: './dist'},
+  js: { source: './src/js/**/*.js', entry: './src/js/main.js', dest: './dist/js'}
+}
 
 gulp.task('css', () => {
   return gulp
-    .src(cssSource)
+    .src(settings.css.source)
     .pipe(sass().on('error', sass.logError))
     .pipe(autoprefixer())
-    .pipe(gulp.dest(cssDest)) // Pipe unminified
+    .pipe(gulp.dest(settings.css.dest)) // Pipe unminified
     .pipe(csso())
     .pipe(rename({ extname: '.min.css' }))
-    .pipe(gulp.dest(cssDest))
+    .pipe(gulp.dest(settings.css.dest))
 })
 
 gulp.task('css:dev', () => {
   return gulp
-    .src(cssSource)
+    .src(settings.css.source)
     .pipe(sass().on('error', sass.logError))
-    .pipe(gulp.dest(cssDest))
+    .pipe(gulp.dest(settings.css.dest))
 })
 
 gulp.task('css:watch', ['css:dev'], () => {
-  return watchSass(cssSource, { verbose: true })
+  return watchSass(settings.css.source, { verbose: true })
     .pipe(sass())
-    .pipe(gulp.dest(cssDest))
+    .pipe(gulp.dest(settings.css.dest))
 })
 
 gulp.task('html', () => {
   gulp
-    .src(htmlSource)
+    .src(settings.html.source)
     .pipe(
       fileInclude({
         prefix: '@@',
         basepath: './src'
       })
     )
-    .pipe(gulp.dest(htmlDest))
+    .pipe(gulp.dest(settings.html.dest))
 })
 
 gulp.task('html:dev', () => {
   gulp
-    .src(htmlSource)
+    .src(settings.html.source)
     .pipe(
       fileInclude({
         prefix: '@@',
         basepath: './src'
       })
     )
-    .pipe(gulp.dest(htmlDest))
+    .pipe(gulp.dest(settings.html.dest))
 })
 
 gulp.task('html:watch', ['html:dev'], () => {
-  gulp.watch(htmlSource, ['html:dev'])
+  gulp.watch(settings.html.source, ['html:dev'])
 })
 
 gulp.task('js', () => {
   gulp
-    .src(jsEntry)
+    .src(settings.js.entry)
     .pipe(
       bro({
         plugin: [tinyify],
@@ -81,15 +78,15 @@ gulp.task('js', () => {
       })
     )
     .pipe(rename({ extname: '.min.js' }))
-    .pipe(gulp.dest(jsDest))
+    .pipe(gulp.dest(settings.js.dest))
 })
 
 gulp.task('js:dev', () => {
-  gulp.src(jsEntry).pipe(bro()).pipe(gulp.dest(jsDest))
+  gulp.src(settings.js.entry).pipe(bro()).pipe(gulp.dest(settings.js.dest))
 })
 
 gulp.task('js:watch', ['js:dev'], () => {
-  gulp.watch(jsSource, ['js:dev'])
+  gulp.watch(settings.js.source, ['js:dev'])
 })
 
 gulp.task('move', () =>
@@ -98,14 +95,13 @@ gulp.task('move', () =>
     .pipe(gulp.dest('./dist'))
 )
 
-gulp.task('move:watch', () => {
+gulp.task('move:watch', ['move'], () => {
   return gulp.watch(['./src/*/*', '!./src/{js,scss,img,inc}/**/*'], ['move'])
 })
 
 gulp.task('images', () =>
   gulp
     .src('./src/img/**/*')
-    .pipe(cache('images', { optimizeMemory: true }))
     .pipe(
       imagemin([
         imagemin.jpegtran({ progressive: true }),
@@ -118,6 +114,20 @@ gulp.task('images', () =>
     .pipe(gulp.dest('./dist/img'))
 )
 
-gulp.task('default', ['css', 'html', 'js', 'move'])
-gulp.task('dev', ['css:dev', 'html:dev', 'js:dev', 'move'])
-gulp.task('watch', ['css:watch', 'html:watch', 'js:watch', 'move:watch'])
+gulp.task('images:dev', () =>
+  gulp.src('./src/img/**/*').pipe(gulp.dest('./dist/img'))
+)
+
+gulp.task('images:watch', ['images:dev'], () =>
+  gulp.watch('./src/img/**/*', ['images:dev'])
+)
+
+gulp.task('default', ['css', 'html', 'js', 'move', 'images'])
+gulp.task('dev', ['css:dev', 'html:dev', 'js:dev', 'move', 'images:dev'])
+gulp.task('watch', [
+  'css:watch',
+  'html:watch',
+  'js:watch',
+  'move:watch',
+  'images:watch'
+])
