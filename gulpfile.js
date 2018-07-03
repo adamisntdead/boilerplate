@@ -5,11 +5,17 @@ const csso = require('gulp-csso')
 const rename = require('gulp-rename')
 const watchSass = require('gulp-watch-sass')
 const fileInclude = require('gulp-file-include')
+const bro = require('gulp-bro')
+const babelify = require('babelify')
+const tinyify = require('tinyify')
 
 const cssSource = './src/scss/**/*.{scss, sass, css}'
 const cssDest = './dist/css'
 const htmlSource = './src/*.html'
 const htmlDest = './dist'
+const jsSource = './src/js/**/*.js'
+const jsEntry = './src/js/main.js' // Define a single or series of entry files
+const jsDest = './dist/js'
 
 gulp.task('css', () => {
   return gulp
@@ -23,7 +29,7 @@ gulp.task('css', () => {
 })
 
 gulp.task('css:dev', () => {
-  return gulp 
+  return gulp
     .src(cssSource)
     .pipe(sass().on('error', sass.logError))
     .pipe(gulp.dest(cssDest))
@@ -36,28 +42,58 @@ gulp.task('css:watch', ['css:dev'], () => {
 })
 
 gulp.task('html', () => {
-  gulp.src(htmlSource)
-  .pipe(fileInclude({
-    prefix: '@@',
-    basepath: './src'
-  }))
-  .pipe(gulp.dest(htmlDest))
+  gulp
+    .src(htmlSource)
+    .pipe(
+      fileInclude({
+        prefix: '@@',
+        basepath: './src'
+      })
+    )
+    .pipe(gulp.dest(htmlDest))
 })
 
 gulp.task('html:dev', () => {
-  gulp.src(htmlSource)
-  .pipe(fileInclude({
-    prefix: '@@',
-    basepath: './src'
-  }))
-  .pipe(gulp.dest(htmlDest))
+  gulp
+    .src(htmlSource)
+    .pipe(
+      fileInclude({
+        prefix: '@@',
+        basepath: './src'
+      })
+    )
+    .pipe(gulp.dest(htmlDest))
 })
 
 gulp.task('html:watch', ['html:dev'], () => {
   gulp.watch(htmlSource, ['html:dev'])
 })
 
+gulp.task('js', () => {
+  gulp
+    .src(jsEntry)
+    .pipe(
+      bro({
+        plugin: [
+          tinyify
+        ],
+        transform: [
+          babelify.configure({ presets: ['@babel/preset-es2015'] }),
+        ]
+      })
+    )
+    .pipe(rename({ extname: '.min.js' }))
+    .pipe(gulp.dest(jsDest))
+})
 
-gulp.task('default', ['css', 'html'])
-gulp.task('dev', ['css:dev', 'html:dev'])
-gulp.task('watch', ['css:watch', 'html:watch'])
+gulp.task('js:dev', () => {
+  gulp.src(jsEntry).pipe(bro()).pipe(gulp.dest(jsDest))
+})
+
+gulp.task('js:watch', ['js:dev'], () => {
+  gulp.watch(jsSource, ['js:dev'])
+})
+
+gulp.task('default', ['css', 'html', 'js'])
+gulp.task('dev', ['css:dev', 'html:dev', 'js:dev'])
+gulp.task('watch', ['css:watch', 'html:watch', 'js:watch'])
