@@ -4,9 +4,12 @@ const autoprefixer = require('gulp-autoprefixer')
 const csso = require('gulp-csso')
 const rename = require('gulp-rename')
 const watchSass = require('gulp-watch-sass')
+const fileInclude = require('gulp-file-include')
 
 const cssSource = './src/scss/**/*.{scss, sass, css}'
 const cssDest = './dist/css'
+const htmlSource = './src/*.html'
+const htmlDest = './dist'
 
 gulp.task('css', () => {
   return gulp
@@ -30,6 +33,15 @@ gulp.task('css:watch', ['css:dev'], () => {
   return watchSass(cssSource, { verbose: true })
     .pipe(sass())
     .pipe(gulp.dest(cssDest))
+})
+
+gulp.task('html', () => {
+  gulp.src(htmlSource)
+  .pipe(fileInclude({
+    prefix: '@@',
+    basepath: './src'
+  }))
+  .pipe(gulp.dest(htmlDest))
 })
 
 gulp.task('default', ['css'])
