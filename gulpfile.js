@@ -8,6 +8,7 @@ const fileInclude = require('gulp-file-include')
 const bro = require('gulp-bro')
 const babelify = require('babelify')
 const tinyify = require('tinyify')
+const imagemin = require('gulp-imagemin')
 
 const cssSource = './src/scss/**/*.{scss, sass, css}'
 const cssDest = './dist/css'
@@ -74,12 +75,8 @@ gulp.task('js', () => {
     .src(jsEntry)
     .pipe(
       bro({
-        plugin: [
-          tinyify
-        ],
-        transform: [
-          babelify.configure({ presets: ['@babel/preset-es2015'] }),
-        ]
+        plugin: [tinyify],
+        transform: [babelify.configure({ presets: ['@babel/preset-es2015'] })]
       })
     )
     .pipe(rename({ extname: '.min.js' }))
@@ -94,12 +91,31 @@ gulp.task('js:watch', ['js:dev'], () => {
   gulp.watch(jsSource, ['js:dev'])
 })
 
-gulp.task('move', () => gulp.src(['./src/*/*', '!./src/{js,scss,inc}/**/*'])
-.pipe(gulp.dest('./dist')))
+gulp.task('move', () =>
+  gulp
+    .src(['./src/*/*', '!./src/{js,scss,img,inc}/**/*'])
+    .pipe(gulp.dest('./dist'))
+)
 
 gulp.task('move:watch', () => {
-  return gulp.watch(['./src/*/*', '!./src/{js,scss,inc}/**/*'], ['move'])
+  return gulp.watch(['./src/*/*', '!./src/{js,scss,img,inc}/**/*'], ['move'])
 })
+
+gulp.task('images', () =>
+  gulp
+    .src('./src/img/**/*')
+    .pipe(
+      imagemin([
+        imagemin.jpegtran({ progressive: true }),
+        imagemin.optipng({ optimizationLevel: 3 }),
+        imagemin.svgo({
+          plugins: [{ removeViewBox: false }]
+        })
+      ])
+    )
+    .pipe(gulp.dest('./dist/img'))
+)
+
 gulp.task('default', ['css', 'html', 'js', 'move'])
 gulp.task('dev', ['css:dev', 'html:dev', 'js:dev', 'move'])
 gulp.task('watch', ['css:watch', 'html:watch', 'js:watch', 'move:watch'])
