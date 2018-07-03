@@ -44,6 +44,20 @@ gulp.task('html', () => {
   .pipe(gulp.dest(htmlDest))
 })
 
-gulp.task('default', ['css'])
-gulp.task('dev', ['css:dev'])
-gulp.task('watch', ['css:watch'])
+gulp.task('html:dev', () => {
+  gulp.src(htmlSource)
+  .pipe(fileInclude({
+    prefix: '@@',
+    basepath: './src'
+  }))
+  .pipe(gulp.dest(htmlDest))
+})
+
+gulp.task('html:watch', ['html:dev'], () => {
+  gulp.watch(htmlSource, ['html:dev'])
+})
+
+
+gulp.task('default', ['css', 'html'])
+gulp.task('dev', ['css:dev', 'html:dev'])
+gulp.task('watch', ['css:watch', 'html:watch'])
