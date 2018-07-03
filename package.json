@@ -1,0 +1,13 @@
+{
+  "name": "starter-boilerplate",
+  "version": "1.0.0",
+  "description": "A Starter Boilerplate For Front End Development",
+  "main": "src/js/index.js",
+  "repository": "https://github.com/adamisntdead/boilerplate",
+  "author": "Adam Kelly <adamkelly2201@gmail.com>",
+  "license": "MIT",
+  "private": true,
+  "devDependencies": {
+    "gulp": "^3.9.1"
+  }
+}
