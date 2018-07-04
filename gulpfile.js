@@ -79,7 +79,6 @@ gulp.task('html:dev', () => {
 gulp.task('html:format', () => {
   return gulp
     .src(settings.html.source)
-    .pipe(inlineImagesize())
     .pipe(htmlbeautify({ indentSize: settings.html.indent }))
     .pipe(gulp.dest('./src'));
 });
@@ -160,7 +159,7 @@ gulp.task('images:watch', ['images:dev'], () =>
 );
 
 gulp.task('browser-sync', () => {
-  browserSync.init({ server: { baseDir: './dist' } });
+  browserSync.init({ server: { baseDir: './dist', directory: true } });
 
   gulp
     .watch(['./dist/css/*.css', './dist/*.html', './dist/*.img', './dist/*.js'])
