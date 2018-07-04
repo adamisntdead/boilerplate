@@ -17,6 +17,7 @@
     "@babel/core": "^7.0.0-beta.51",
     "@babel/preset-es2015": "^7.0.0-beta.51",
     "babelify": "^9.0.0",
+    "browser-sync": "^2.24.5",
     "gulp": "^3.9.1",
     "gulp-autoprefixer": "^5.0.0",
     "gulp-bro": "^1.0.3",

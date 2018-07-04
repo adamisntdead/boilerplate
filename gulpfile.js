@@ -13,6 +13,7 @@ const inlineImagesize = require('gulp-inline-imagesize');
 const prettier = require('gulp-prettier');
 const htmlbeautify = require('gulp-html-beautify');
 const merge = require('merge-stream');
+const browserSync = require('browser-sync');
 
 const settings = {
   css: { source: './src/scss/**/*.{scss, sass, css}', dest: './dist/css' },
@@ -45,7 +46,8 @@ gulp.task('css:dev', () => {
 gulp.task('css:watch', ['css:dev'], () => {
   return watchSass(settings.css.source, { verbose: true })
     .pipe(sass())
-    .pipe(gulp.dest(settings.css.dest));
+    .pipe(gulp.dest(settings.css.dest))
+    .pipe(browserSync.stream());
 });
 
 gulp.task('html', () => {
@@ -128,12 +130,10 @@ gulp.task('move', () => {
 });
 
 gulp.task('move:watch', ['move'], () => {
-  const nonProcessed = gulp.watch(
+  return gulp.watch(
     ['./src/*/*', '!./src/{js,scss,img,inc}/**/*'],
     ['move']
   );
-  const vendor = gulp.watch('./src/**/vendor/**/*', ['move']);
-  return merge(nonProcessed, vendor);
 });
 
 gulp.task('images', () =>
@@ -159,6 +159,13 @@ gulp.task('images:watch', ['images:dev'], () =>
   gulp.watch('./src/img/**/*', ['images:dev'])
 );
 
+gulp.task('browser-sync', () => {
+  browserSync.init({ server: { baseDir: './dist' } });
+
+  gulp
+    .watch(['./dist/css/*.css', './dist/*.html', './dist/*.img', './dist/*.js'])
+    .on('change', browserSync.reload);
+});
 gulp.task('default', ['css', 'html', 'js', 'move', 'images']);
 gulp.task('dev', ['css:dev', 'html:dev', 'js:dev', 'move', 'images:dev']);
 gulp.task('watch', [
@@ -166,6 +173,7 @@ gulp.task('watch', [
   'html:watch',
   'js:watch',
   'move:watch',
-  'images:watch'
+  'images:watch',
+  'browser-sync'
 ]);
 gulp.task('format', ['js:format', 'html:format']);
