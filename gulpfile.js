@@ -155,8 +155,20 @@ gulp.task('images:dev', () =>
 );
 
 gulp.task('images:watch', ['images:dev'], () =>
-  gulp.watch('./src/img/**/*', ['images:dev'])
-);
+  gulp.watch('./src/img/**/*')
+    .on("change", (file) => {
+      gulp
+        .src(file.path)
+        .pipe(imagemin([
+          imagemin.jpegtran({ progressive: true }),
+          imagemin.optipng({ optimizationLevel: 3 }),
+          imagemin.svgo({
+            plugins: [{ removeViewBox: false }]
+          })
+        ]))
+        .pipe(gulp.dest('./dist/img'))
+    }));
+
 
 gulp.task('browser-sync', () => {
   browserSync.init({ server: { baseDir: './dist', directory: true } });
