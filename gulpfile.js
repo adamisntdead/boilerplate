@@ -12,6 +12,7 @@ const imagemin = require('gulp-imagemin');
 const inlineImagesize = require('gulp-inline-imagesize');
 const prettier = require('gulp-prettier');
 const htmlbeautify = require('gulp-html-beautify');
+const merge = require('merge-stream');
 
 const settings = {
   css: { source: './src/scss/**/*.{scss, sass, css}', dest: './dist/css' },
@@ -113,11 +114,16 @@ gulp.task('js:watch', ['js:dev'], () => {
   gulp.watch(settings.js.source, ['js:dev']);
 });
 
-gulp.task('move', () =>
-  gulp
+gulp.task('move', () => {
+  const nonProcessed = gulp
     .src(['./src/*/*', '!./src/{js,scss,img,inc}/**/*'])
     .pipe(gulp.dest('./dist'))
-);
+  
+  const vendor = gulp.src('./src/**/vendor/**/*')
+    .pipe(gulp.dest('./dist'))
+
+  return merge(nonProcessed, vendor)
+});
 
 gulp.task('move:watch', ['move'], () => {
   return gulp.watch(['./src/*/*', '!./src/{js,scss,img,inc}/**/*'], ['move']);
