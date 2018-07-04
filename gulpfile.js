@@ -126,7 +126,9 @@ gulp.task('move', () => {
 });
 
 gulp.task('move:watch', ['move'], () => {
-  return gulp.watch(['./src/*/*', '!./src/{js,scss,img,inc}/**/*'], ['move']);
+  const nonProcessed = gulp.watch(['./src/*/*', '!./src/{js,scss,img,inc}/**/*'], ['move'])
+  const vendor = gulp.watch('./src/**/vendor/**/*', ['move'])
+  return merge(nonProcessed, vendor)
 });
 
 gulp.task('images', () =>
