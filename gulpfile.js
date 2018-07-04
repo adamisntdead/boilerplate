@@ -40,7 +40,11 @@ const settings = {
 gulp.task('css', () => {
   return gulp
     .src(settings.css.source)
-    .pipe(sass().on('error', sass.logError))
+    .pipe(
+      sass({
+        includePaths: ['node_modules']
+      }).on('error', sass.logError)
+    )
     .pipe(autoprefixer())
     .pipe(gulp.dest(settings.css.dest)) // Pipe unminified
     .pipe(csso())
@@ -51,13 +55,24 @@ gulp.task('css', () => {
 gulp.task('css:dev', () => {
   return gulp
     .src(settings.css.source)
-    .pipe(sass().on('error', sass.logError))
+    .pipe(
+      sass({
+        includePaths: ['node_modules']
+      }).on('error', sass.logError)
+    )
     .pipe(gulp.dest(settings.css.dest));
 });
 
 gulp.task('css:watch', ['css:dev'], () => {
-  return watchSass(settings.css.source, { verbose: true })
-    .pipe(sass())
+  return watchSass(settings.css.source, {
+    includePaths: ['node_modules'],
+    verbose: true
+  })
+    .pipe(
+      sass({
+        includePaths: ['node_modules']
+      }).on('error', sass.logError)
+    )
     .pipe(gulp.dest(settings.css.dest))
     .pipe(browserSync.stream());
 });
@@ -181,7 +196,8 @@ gulp.task('images:watch', ['images:dev'], () =>
 );
 
 // Generate & Inline Critical-path CSS
-gulp.task('critical', () => gulp
+gulp.task('critical', () =>
+  gulp
     .src('./dist/*.html')
     .pipe(
       critical({
@@ -190,7 +206,7 @@ gulp.task('critical', () => gulp
         css: ['dist/css/styles.min.css']
       })
     )
-    .on('error', (err) => {
+    .on('error', err => {
       console.error(err.message);
     })
     .pipe(gulp.dest('dist'))

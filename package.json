@@ -35,7 +35,8 @@
     "tinyify": "^2.4.3"
   },
   "dependencies": {
-    "jquery": "^3.3.1",
+    "jquery": "1.11.3",
+    "normalize.css": "^8.0.0",
     "slick-carousel": "^1.8.1"
   }
 }
