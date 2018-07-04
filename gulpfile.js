@@ -17,7 +17,13 @@ const browserSync = require('browser-sync');
 
 const settings = {
   css: { source: './src/scss/**/*.{scss, sass, css}', dest: './dist/css' },
-  html: { watch: './src/**/*.html', source: './src/*.html', dest: './dist', indent: 4 },
+  html: { watch: './src/**/*.html', source: './src/*.html', dest: './dist', formatting: {
+    indent: 4,
+    indent_char: ' ',
+    wrap_line_length: 78,
+    brace_style: 'expand',
+    unformatted: ['sub', 'sup', 'b', 'i', 'u', 'span', 'quote', 'strong']
+  } },
   js: {
     source: './src/js/**/*.js',
     entry: './src/js/main.js',
@@ -60,7 +66,7 @@ gulp.task('html', () => {
       })
     )
     .pipe(inlineImagesize())
-    .pipe(htmlbeautify({ indentSize: settings.html.indent }))
+    .pipe(htmlbeautify(settings.html.formatting))
     .pipe(gulp.dest(settings.html.dest));
 });
 
@@ -79,7 +85,7 @@ gulp.task('html:dev', () => {
 gulp.task('html:format', () => {
   return gulp
     .src(settings.html.source)
-    .pipe(htmlbeautify({ indentSize: settings.html.indent }))
+    .pipe(htmlbeautify(settings.html.formatting))
     .pipe(gulp.dest('./src'));
 });
 
