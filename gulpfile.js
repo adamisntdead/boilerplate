@@ -14,10 +14,22 @@ const prettier = require('gulp-prettier');
 const htmlbeautify = require('gulp-html-beautify');
 const merge = require('merge-stream');
 const browserSync = require('browser-sync');
+const critical = require('critical').stream;
 
 const settings = {
   css: { source: './src/scss/**/*.{scss, sass, css}', dest: './dist/css' },
-  html: { source: './src/*.html', dest: './dist', indent: 4 },
+  html: {
+    watch: './src/**/*.html',
+    source: './src/*.html',
+    dest: './dist',
+    formatting: {
+      indent: 4,
+      indent_char: ' ',
+      wrap_line_length: 78,
+      brace_style: 'expand',
+      unformatted: ['sub', 'sup', 'b', 'i', 'u', 'span', 'quote', 'strong']
+    }
+  },
   js: {
     source: './src/js/**/*.js',
     entry: './src/js/main.js',
@@ -60,7 +72,7 @@ gulp.task('html', () => {
       })
     )
     .pipe(inlineImagesize())
-    .pipe(htmlbeautify({ indentSize: settings.html.indent }))
+    .pipe(htmlbeautify(settings.html.formatting))
     .pipe(gulp.dest(settings.html.dest));
 });
 
@@ -79,13 +91,12 @@ gulp.task('html:dev', () => {
 gulp.task('html:format', () => {
   return gulp
     .src(settings.html.source)
-    .pipe(inlineImagesize())
-    .pipe(htmlbeautify({ indentSize: settings.html.indent }))
+    .pipe(htmlbeautify(settings.html.formatting))
     .pipe(gulp.dest('./src'));
 });
 
 gulp.task('html:watch', ['html:dev'], () => {
-  gulp.watch(settings.html.source, ['html:dev']);
+  gulp.watch(settings.html.watch, ['html:dev']);
 });
 
 gulp.task('js', () => {
@@ -130,10 +141,7 @@ gulp.task('move', () => {
 });
 
 gulp.task('move:watch', ['move'], () => {
-  return gulp.watch(
-    ['./src/*/*', '!./src/{js,scss,img,inc}/**/*'],
-    ['move']
-  );
+  return gulp.watch(['./src/*/*', '!./src/{js,scss,img,inc}/**/*'], ['move']);
 });
 
 gulp.task('images', () =>
@@ -156,11 +164,40 @@ gulp.task('images:dev', () =>
 );
 
 gulp.task('images:watch', ['images:dev'], () =>
-  gulp.watch('./src/img/**/*', ['images:dev'])
+  gulp.watch('./src/img/**/*').on('change', file => {
+    gulp
+      .src(file.path)
+      .pipe(
+        imagemin([
+          imagemin.jpegtran({ progressive: true }),
+          imagemin.optipng({ optimizationLevel: 3 }),
+          imagemin.svgo({
+            plugins: [{ removeViewBox: false }]
+          })
+        ])
+      )
+      .pipe(gulp.dest('./dist/img'));
+  })
+);
+
+// Generate & Inline Critical-path CSS
+gulp.task('critical', () => gulp
+    .src('./dist/*.html')
+    .pipe(
+      critical({
+        base: 'dist/',
+        inline: true,
+        css: ['dist/css/styles.min.css']
+      })
+    )
+    .on('error', (err) => {
+      console.error(err.message);
+    })
+    .pipe(gulp.dest('dist'))
 );
 
 gulp.task('browser-sync', () => {
-  browserSync.init({ server: { baseDir: './dist' } });
+  browserSync.init({ server: { baseDir: './dist', directory: true } });
 
   gulp
     .watch(['./dist/**/*', '!./dist/**/*.css'])
