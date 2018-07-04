@@ -163,7 +163,7 @@ gulp.task('browser-sync', () => {
   browserSync.init({ server: { baseDir: './dist' } });
 
   gulp
-    .watch(['./dist/css/*.css', './dist/*.html', './dist/*.img', './dist/*.js'])
+    .watch(['./dist/**/*', '!./dist/**/*.css'])
     .on('change', browserSync.reload);
 });
 gulp.task('default', ['css', 'html', 'js', 'move', 'images']);
