@@ -3110,9 +3110,9 @@ gulp-imagemin@^4.1.0:
     imagemin-optipng "^5.2.1"
     imagemin-svgo "^6.0.0"
 
-gulp-inline-imagesize@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/gulp-inline-imagesize/-/gulp-inline-imagesize-1.1.0.tgz#585094f0ad069a2d0a1edf84209b1dfaa1bf0287"
+gulp-inline-imagesize@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/gulp-inline-imagesize/-/gulp-inline-imagesize-1.1.1.tgz#6ad8a906bf2feac4a5017d71758d9201884352d2"
   dependencies:
     plugin-error "^0.1.2"
     probe-image-size "^4.0.0"
