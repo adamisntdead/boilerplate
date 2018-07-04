@@ -1,4 +1,6 @@
-const { hi } = require('./say-hi');
+const $ = require('jquery')
+require('slick-carousel')
 
-hi();
-console.log('banter');
+$(() => {
+    $('.my-slider').slick()
+})
