@@ -7,6 +7,12 @@
   "author": "Adam Kelly <adamkelly2201@gmail.com>",
   "license": "MIT",
   "private": true,
+  "scripts": {
+    "dist": "gulp",
+    "dev": "gulp dev",
+    "watch": "gulp watch",
+    "format": "gulp format"
+  },
   "devDependencies": {
     "@babel/core": "^7.0.0-beta.51",
     "@babel/preset-es2015": "^7.0.0-beta.51",
