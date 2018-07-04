@@ -17,7 +17,7 @@ const browserSync = require('browser-sync');
 
 const settings = {
   css: { source: './src/scss/**/*.{scss, sass, css}', dest: './dist/css' },
-  html: { source: './src/*.html', dest: './dist', indent: 4 },
+  html: { watch: './src/**/*.html', source: './src/*.html', dest: './dist', indent: 4 },
   js: {
     source: './src/js/**/*.js',
     entry: './src/js/main.js',
@@ -85,7 +85,7 @@ gulp.task('html:format', () => {
 });
 
 gulp.task('html:watch', ['html:dev'], () => {
-  gulp.watch(settings.html.source, ['html:dev']);
+  gulp.watch(settings.html.watch, ['html:dev']);
 });
 
 gulp.task('js', () => {
