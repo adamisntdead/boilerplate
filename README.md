@@ -13,7 +13,7 @@ This is not for sites that use frameworks such as Vue, React or Angular.
 * Image Optimization
 * Moves Everything To An Output Folder
 * Adds Image Sizes To HTML Inline (for the backend developers!)
-* Clean up your source code (HTML and Sass)
+* Clean up your source code (HTML and JS)
 * Live Reloading / Rebuilding
 
 ## What Are We Using?

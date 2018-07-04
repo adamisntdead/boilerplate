@@ -1,4 +1,4 @@
-const { hi } = require('./say-hi')
+const { hi } = require('./say-hi');
 
-hi()
-console.log('banter')
+hi();
+console.log('banter');

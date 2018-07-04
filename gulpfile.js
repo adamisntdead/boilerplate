@@ -9,10 +9,13 @@ const bro = require('gulp-bro')
 const babelify = require('babelify')
 const tinyify = require('tinyify')
 const imagemin = require('gulp-imagemin')
+const inlineImagesize = require('gulp-inline-imagesize')
+const prettier = require('gulp-prettier')
+const htmlbeautify = require('gulp-html-beautify')
 
 const settings = {
   css: { source: './src/scss/**/*.{scss, sass, css}', dest: './dist/css'},
-  html: { source: './src/*.html', dest: './dist'},
+  html: { source: './src/*.html', dest: './dist', indent: 4},
   js: { source: './src/js/**/*.js', entry: './src/js/main.js', dest: './dist/js'}
 }
 
@@ -41,14 +44,15 @@ gulp.task('css:watch', ['css:dev'], () => {
 })
 
 gulp.task('html', () => {
-  gulp
+  return gulp
     .src(settings.html.source)
     .pipe(
       fileInclude({
         prefix: '@@',
         basepath: './src'
       })
-    )
+    ).pipe(inlineImagesize())
+    .pipe(htmlbeautify({ indentSize: settings.html.indent }))
     .pipe(gulp.dest(settings.html.dest))
 })
 
@@ -62,6 +66,13 @@ gulp.task('html:dev', () => {
       })
     )
     .pipe(gulp.dest(settings.html.dest))
+})
+
+gulp.task('html:format', () => {
+  return gulp.src(settings.html.source)
+  .pipe(inlineImagesize())
+  .pipe(htmlbeautify({ indentSize: settings.html.indent }))
+  .pipe(gulp.dest('./src'))
 })
 
 gulp.task('html:watch', ['html:dev'], () => {
@@ -84,6 +95,14 @@ gulp.task('js', () => {
 gulp.task('js:dev', () => {
   gulp.src(settings.js.entry).pipe(bro()).pipe(gulp.dest(settings.js.dest))
 })
+
+gulp.task('js:format', () => {
+  return gulp.src('./src/**/*.js')
+    .pipe(prettier({ singleQuote: true }))
+    .pipe(gulp.dest('./src'))
+})
+
+
 
 gulp.task('js:watch', ['js:dev'], () => {
   gulp.watch(settings.js.source, ['js:dev'])
@@ -131,3 +150,4 @@ gulp.task('watch', [
   'move:watch',
   'images:watch'
 ])
+gulp.task('format', ['js:format', 'html:format',])
