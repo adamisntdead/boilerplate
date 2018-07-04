@@ -100,7 +100,10 @@ gulp.task('js', () => {
 });
 
 gulp.task('js:dev', () => {
-  gulp.src(settings.js.entry).pipe(bro()).pipe(gulp.dest(settings.js.dest));
+  gulp
+    .src(settings.js.entry)
+    .pipe(bro())
+    .pipe(gulp.dest(settings.js.dest));
 });
 
 gulp.task('js:format', () => {
@@ -117,18 +120,20 @@ gulp.task('js:watch', ['js:dev'], () => {
 gulp.task('move', () => {
   const nonProcessed = gulp
     .src(['./src/*/*', '!./src/{js,scss,img,inc}/**/*'])
-    .pipe(gulp.dest('./dist'))
-  
-  const vendor = gulp.src('./src/**/vendor/**/*')
-    .pipe(gulp.dest('./dist'))
+    .pipe(gulp.dest('./dist'));
 
-  return merge(nonProcessed, vendor)
+  const vendor = gulp.src('./src/**/vendor/**/*').pipe(gulp.dest('./dist'));
+
+  return merge(nonProcessed, vendor);
 });
 
 gulp.task('move:watch', ['move'], () => {
-  const nonProcessed = gulp.watch(['./src/*/*', '!./src/{js,scss,img,inc}/**/*'], ['move'])
-  const vendor = gulp.watch('./src/**/vendor/**/*', ['move'])
-  return merge(nonProcessed, vendor)
+  const nonProcessed = gulp.watch(
+    ['./src/*/*', '!./src/{js,scss,img,inc}/**/*'],
+    ['move']
+  );
+  const vendor = gulp.watch('./src/**/vendor/**/*', ['move']);
+  return merge(nonProcessed, vendor);
 });
 
 gulp.task('images', () =>
