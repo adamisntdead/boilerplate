@@ -17,11 +17,11 @@ const browserSync = require('browser-sync');
 const critical = require('critical').stream;
 
 const settings = {
-  css: { source: './src/scss/**/*.{scss, sass, css}', dest: './dist/css' },
+  css: { source: 'src/scss/**/*.{scss, sass, css}', dest: 'dist/css' },
   html: {
-    watch: './src/**/*.html',
-    source: './src/*.html',
-    dest: './dist',
+    watch: 'src/**/*.html',
+    source: 'src/*.html',
+    dest: 'dist',
     formatting: {
       indent: 4,
       indent_char: ' ',
@@ -31,9 +31,9 @@ const settings = {
     }
   },
   js: {
-    source: './src/js/**/*.js',
-    entry: './src/js/main.js',
-    dest: './dist/js'
+    source: 'src/js/**/*.js',
+    entry: 'src/js/main.js',
+    dest: 'dist/js'
   }
 };
 
@@ -83,7 +83,7 @@ gulp.task('html', () => {
     .pipe(
       fileInclude({
         prefix: '@@',
-        basepath: './src'
+        basepath: 'src'
       })
     )
     .pipe(inlineImagesize())
@@ -97,7 +97,7 @@ gulp.task('html:dev', () => {
     .pipe(
       fileInclude({
         prefix: '@@',
-        basepath: './src'
+        basepath: 'src'
       })
     )
     .pipe(gulp.dest(settings.html.dest));
@@ -107,7 +107,7 @@ gulp.task('html:format', () => {
   return gulp
     .src(settings.html.source)
     .pipe(htmlbeautify(settings.html.formatting))
-    .pipe(gulp.dest('./src'));
+    .pipe(gulp.dest('src'));
 });
 
 gulp.task('html:watch', ['html:dev'], () => {
@@ -136,9 +136,9 @@ gulp.task('js:dev', () => {
 
 gulp.task('js:format', () => {
   return gulp
-    .src('./src/**/*.js')
+    .src('src/**/*.js')
     .pipe(prettier({ singleQuote: true }))
-    .pipe(gulp.dest('./src'));
+    .pipe(gulp.dest('src'));
 });
 
 gulp.task('js:watch', ['js:dev'], () => {
@@ -147,21 +147,21 @@ gulp.task('js:watch', ['js:dev'], () => {
 
 gulp.task('move', () => {
   const nonProcessed = gulp
-    .src(['./src/*/*', '!./src/{js,scss,img,inc}/**/*'])
-    .pipe(gulp.dest('./dist'));
+    .src(['src/*/*', '!src/{js,scss,img,inc}/**/*'])
+    .pipe(gulp.dest('dist'));
 
-  const vendor = gulp.src('./src/**/vendor/**/*').pipe(gulp.dest('./dist'));
+  const vendor = gulp.src('src/**/vendor/**/*').pipe(gulp.dest('dist'));
 
   return merge(nonProcessed, vendor);
 });
 
 gulp.task('move:watch', ['move'], () => {
-  return gulp.watch(['./src/*/*', '!./src/{js,scss,img,inc}/**/*'], ['move']);
+  return gulp.watch(['src/*/*', '!src/{js,scss,img,inc}/**/*'], ['move']);
 });
 
 gulp.task('images', () =>
   gulp
-    .src('./src/img/**/*')
+    .src('src/img/**/*')
     .pipe(
       imagemin([
         imagemin.jpegtran({ progressive: true }),
@@ -171,15 +171,15 @@ gulp.task('images', () =>
         })
       ])
     )
-    .pipe(gulp.dest('./dist/img'))
+    .pipe(gulp.dest('dist/img'))
 );
 
 gulp.task('images:dev', () =>
-  gulp.src('./src/img/**/*').pipe(gulp.dest('./dist/img'))
+  gulp.src('src/img/**/*').pipe(gulp.dest('dist/img'))
 );
 
 gulp.task('images:watch', ['images:dev'], () =>
-  gulp.watch('./src/img/**/*').on('change', file => {
+  gulp.watch('src/img/**/*').on('change', file => {
     gulp
       .src(file.path)
       .pipe(
@@ -191,14 +191,14 @@ gulp.task('images:watch', ['images:dev'], () =>
           })
         ])
       )
-      .pipe(gulp.dest('./dist/img'));
+      .pipe(gulp.dest('dist/img'));
   })
 );
 
 // Generate & Inline Critical-path CSS
 gulp.task('critical', () =>
   gulp
-    .src('./dist/*.html')
+    .src('dist/*.html')
     .pipe(
       critical({
         base: 'dist/',
@@ -213,10 +213,10 @@ gulp.task('critical', () =>
 );
 
 gulp.task('browser-sync', () => {
-  browserSync.init({ server: { baseDir: './dist', directory: true } });
+  browserSync.init({ server: { baseDir: 'dist', directory: true } });
 
   gulp
-    .watch(['./dist/**/*', '!./dist/**/*.css'])
+    .watch(['dist/**/*', '!dist/**/*.css'])
     .on('change', browserSync.reload);
 });
 gulp.task('default', ['css', 'html', 'js', 'move', 'images']);
