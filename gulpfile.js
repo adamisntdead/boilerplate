@@ -1,23 +1,51 @@
+// *************************************
+//
+//   Gulpfile
+//
+// *************************************
+//
+// Available tasks:
+//   `gulp`
+//   `gulp dev`
+//   `gulp watch`
+//   `gulp format`
+//
+// -------------------------------------
+//   Modules
+// -------------------------------------
+//
+// gulp                  : The streaming build system
+// gulp-sass             : Compile Sass
+// gulp-autoprefixer     : Prefix CSS
+// gulp-csso             : Optimize CSS (clean, compress, restructure)
+// gulp-rename           : Rename files
+// gulp-watch-sass       : Watches for SASS modifications - with streaming
+// gulp-file-include     : Include files in other files
+// gulp-bro              : Javascript bundler with Browserify and incremental builds
+// gulp-imagemin         : Minify PNG, JPEG, GIF and SVG images
+// gulp-inline-imagesize : Inline the size of images into into html comments
+// gulp-prettier         : Format javascript
+// gulp-html-beautify    : Format HTML
+// merge-stream          : Merge multiple gulp stream sources
+// browser-sync          : Sync browser refresh & CSS repalcement with file system changes
+// critical              : Inline render path critical css and async load the other css
+// tinyify               : Javascript optimizer (minify, remove dead code, tree shake, collapse...)
+// babelify              : Convert ES6/ESNext code to ES5
+//
+// -------------------------------------
+
 const gulp = require('gulp');
-const sass = require('gulp-sass');
-const autoprefixer = require('gulp-autoprefixer');
-const csso = require('gulp-csso');
-const rename = require('gulp-rename');
-const watchSass = require('gulp-watch-sass');
-const fileInclude = require('gulp-file-include');
-const bro = require('gulp-bro');
-const babelify = require('babelify');
-const tinyify = require('tinyify');
-const imagemin = require('gulp-imagemin');
-const inlineImagesize = require('gulp-inline-imagesize');
-const prettier = require('gulp-prettier');
-const htmlbeautify = require('gulp-html-beautify');
-const merge = require('merge-stream');
-const browserSync = require('browser-sync');
-const critical = require('critical').stream;
+const plugins = require('gulp-load-plugins')({
+  lazy: true,
+  overridePattern: false,
+  pattern: '{critical,tinyify,babelify,browser-sync,merge-stream}'
+});
 
 const settings = {
-  css: { source: 'src/scss/**/*.{scss, sass, css}', dest: 'dist/css' },
+  css: {
+    source: 'src/scss/**/*.{scss, sass, css}',
+    dest: 'dist/css'
+  },
   html: {
     watch: 'src/**/*.html',
     source: 'src/*.html',
@@ -37,18 +65,24 @@ const settings = {
   }
 };
 
+// -------------------------------------
+//   Task: CSS
+// -------------------------------------
+
 gulp.task('css', () => {
   return gulp
     .src(settings.css.source)
     .pipe(
-      sass({
-        includePaths: ['node_modules']
-      }).on('error', sass.logError)
+      plugins
+        .sass({
+          includePaths: ['node_modules']
+        })
+        .on('error', plugins.sass.logError)
     )
-    .pipe(autoprefixer())
+    .pipe(plugins.autoprefixer())
     .pipe(gulp.dest(settings.css.dest)) // Pipe unminified
-    .pipe(csso())
-    .pipe(rename({ extname: '.min.css' }))
+    .pipe(plugins.csso())
+    .pipe(plugins.rename({ extname: '.min.css' }))
     .pipe(gulp.dest(settings.css.dest));
 });
 
@@ -56,38 +90,63 @@ gulp.task('css:dev', () => {
   return gulp
     .src(settings.css.source)
     .pipe(
-      sass({
-        includePaths: ['node_modules']
-      }).on('error', sass.logError)
+      plugins
+        .sass({
+          includePaths: ['node_modules']
+        })
+        .on('error', plugins.sass.logError)
     )
     .pipe(gulp.dest(settings.css.dest));
 });
 
 gulp.task('css:watch', ['css:dev'], () => {
-  return watchSass(settings.css.source, {
-    includePaths: ['node_modules'],
-    verbose: true
-  })
+  return plugins
+    .watchSass(settings.css.source, {
+      includePaths: ['node_modules'],
+      verbose: true
+    })
     .pipe(
-      sass({
-        includePaths: ['node_modules']
-      }).on('error', sass.logError)
+      plugins
+        .sass({
+          includePaths: ['node_modules']
+        })
+        .on('error', plugins.sass.logError)
     )
     .pipe(gulp.dest(settings.css.dest))
-    .pipe(browserSync.stream());
+    .pipe(plugins.browserSync.stream());
 });
+
+gulp.task('critical', () =>
+  gulp
+    .src('dist/*.html')
+    .pipe(
+      plugins.critical.stream({
+        base: 'dist/',
+        inline: true,
+        css: ['dist/css/styles.min.css']
+      })
+    )
+    .on('error', err => {
+      console.error(err.message);
+    })
+    .pipe(gulp.dest('dist'))
+);
+
+// -------------------------------------
+//   Task: HTML
+// -------------------------------------
 
 gulp.task('html', () => {
   return gulp
     .src(settings.html.source)
     .pipe(
-      fileInclude({
+      plugins.fileInclude({
         prefix: '@@',
         basepath: 'src'
       })
     )
-    .pipe(inlineImagesize())
-    .pipe(htmlbeautify(settings.html.formatting))
+    .pipe(plugins.inlineImagesize())
+    .pipe(plugins.htmlBeautify(settings.html.formatting))
     .pipe(gulp.dest(settings.html.dest));
 });
 
@@ -95,7 +154,7 @@ gulp.task('html:dev', () => {
   gulp
     .src(settings.html.source)
     .pipe(
-      fileInclude({
+      plugins.fileInclude({
         prefix: '@@',
         basepath: 'src'
       })
@@ -106,7 +165,7 @@ gulp.task('html:dev', () => {
 gulp.task('html:format', () => {
   return gulp
     .src(settings.html.source)
-    .pipe(htmlbeautify(settings.html.formatting))
+    .pipe(plugins.htmlBeautify(settings.html.formatting))
     .pipe(gulp.dest('src'));
 });
 
@@ -114,36 +173,46 @@ gulp.task('html:watch', ['html:dev'], () => {
   gulp.watch(settings.html.watch, ['html:dev']);
 });
 
+// -------------------------------------
+//   Task: JS
+// -------------------------------------
+
 gulp.task('js', () => {
   gulp
     .src(settings.js.entry)
     .pipe(
-      bro({
-        plugin: [tinyify],
-        transform: [babelify.configure({ presets: ['@babel/preset-es2015'] })]
+      plugins.bro({
+        plugin: [plugins.tinyify],
+        transform: [
+          plugins.babelify.configure({ presets: ['@babel/preset-es2015'] })
+        ]
       })
     )
-    .pipe(rename({ extname: '.min.js' }))
+    .pipe(plugins.rename({ extname: '.min.js' }))
     .pipe(gulp.dest(settings.js.dest));
 });
 
 gulp.task('js:dev', () => {
   gulp
     .src(settings.js.entry)
-    .pipe(bro())
+    .pipe(plugins.bro())
     .pipe(gulp.dest(settings.js.dest));
 });
 
 gulp.task('js:format', () => {
   return gulp
     .src('src/**/*.js')
-    .pipe(prettier({ singleQuote: true }))
+    .pipe(plugins.prettier({ singleQuote: true }))
     .pipe(gulp.dest('src'));
 });
 
 gulp.task('js:watch', ['js:dev'], () => {
   gulp.watch(settings.js.source, ['js:dev']);
 });
+
+// -------------------------------------
+//   Task: Move
+// -------------------------------------
 
 gulp.task('move', () => {
   const nonProcessed = gulp
@@ -152,21 +221,25 @@ gulp.task('move', () => {
 
   const vendor = gulp.src('src/**/vendor/**/*').pipe(gulp.dest('dist'));
 
-  return merge(nonProcessed, vendor);
+  return plugins.mergeStream(nonProcessed, vendor);
 });
 
 gulp.task('move:watch', ['move'], () => {
   return gulp.watch(['src/*/*', '!src/{js,scss,img,inc}/**/*'], ['move']);
 });
 
+// -------------------------------------
+//   Task: Images
+// -------------------------------------
+
 gulp.task('images', () =>
   gulp
     .src('src/img/**/*')
     .pipe(
-      imagemin([
-        imagemin.jpegtran({ progressive: true }),
-        imagemin.optipng({ optimizationLevel: 3 }),
-        imagemin.svgo({
+      plugins.imagemin([
+        plugins.imagemin.jpegtran({ progressive: true }),
+        plugins.imagemin.optipng({ optimizationLevel: 3 }),
+        plugins.imagemin.svgo({
           plugins: [{ removeViewBox: false }]
         })
       ])
@@ -183,10 +256,10 @@ gulp.task('images:watch', ['images:dev'], () =>
     gulp
       .src(file.path)
       .pipe(
-        imagemin([
-          imagemin.jpegtran({ progressive: true }),
-          imagemin.optipng({ optimizationLevel: 3 }),
-          imagemin.svgo({
+        plugins.imagemin([
+          plugins.imagemin.jpegtran({ progressive: true }),
+          plugins.imagemin.optipng({ optimizationLevel: 3 }),
+          plugins.imagemin.svgo({
             plugins: [{ removeViewBox: false }]
           })
         ])
@@ -195,32 +268,32 @@ gulp.task('images:watch', ['images:dev'], () =>
   })
 );
 
-// Generate & Inline Critical-path CSS
-gulp.task('critical', () =>
-  gulp
-    .src('dist/*.html')
-    .pipe(
-      critical({
-        base: 'dist/',
-        inline: true,
-        css: ['dist/css/styles.min.css']
-      })
-    )
-    .on('error', err => {
-      console.error(err.message);
-    })
-    .pipe(gulp.dest('dist'))
-);
+// -------------------------------------
+//   Task: browser-sync
+// -------------------------------------
 
 gulp.task('browser-sync', () => {
-  browserSync.init({ server: { baseDir: 'dist', directory: true } });
+  plugins.browserSync.init({ server: { baseDir: 'dist', directory: true } });
 
-  gulp
-    .watch(['dist/**/*', '!dist/**/*.css'])
-    .on('change', browserSync.reload);
+  gulp.watch(['dist/**/*', '!dist/**/*.css']).on('change', plugins.browserSync.reload);
 });
+
+// -------------------------------------
+//   Task: Default
+// -------------------------------------
+
 gulp.task('default', ['css', 'html', 'js', 'move', 'images']);
+
+// -------------------------------------
+//   Task: Dev
+// -------------------------------------
+
 gulp.task('dev', ['css:dev', 'html:dev', 'js:dev', 'move', 'images:dev']);
+
+// -------------------------------------
+//   Task: Watch
+// -------------------------------------
+
 gulp.task('watch', [
   'css:watch',
   'html:watch',
@@ -229,4 +302,9 @@ gulp.task('watch', [
   'images:watch',
   'browser-sync'
 ]);
+
+// -------------------------------------
+//   Task: Format
+// -------------------------------------
+
 gulp.task('format', ['js:format', 'html:format']);
