@@ -96,6 +96,7 @@ gulp.task('css:dev', () => {
         })
         .on('error', plugins.sass.logError)
     )
+    .pipe(plugins.autoprefixer())
     .pipe(gulp.dest(settings.css.dest));
 });
 
@@ -112,8 +113,9 @@ gulp.task('css:watch', () => {
         })
         .on('error', plugins.sass.logError)
     )
+    .pipe(plugins.autoprefixer())
     .pipe(gulp.dest(settings.css.dest))
-    .pipe(plugins.browserSync.stream());
+    .pipe(plugins.browserSync.reload({ stream: true }));
 });
 
 gulp.task('critical', () =>
@@ -284,7 +286,7 @@ gulp.task('browser-sync', () => {
   plugins.browserSync.init({ server: { baseDir: 'dist', directory: true } });
 
   gulp
-    .watch(['dist/**/*', '!dist/**/*.css'])
+    .watch('dist/**/*')
     .on('change', plugins.browserSync.reload);
 });
 
