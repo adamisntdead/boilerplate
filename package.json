@@ -26,6 +26,7 @@
     "gulp-file-include": "^2.0.1",
     "gulp-html-beautify": "^1.0.1",
     "gulp-imagemin": "^4.1.0",
+    "gulp-inject": "^4.3.2",
     "gulp-inline-imagesize": "^1.1.1",
     "gulp-load-plugins": "^1.5.0",
     "gulp-prettier": "^2.0.0",
@@ -36,7 +37,6 @@
     "tinyify": "^2.4.3"
   },
   "dependencies": {
-    "gulp-inject": "^4.3.2",
     "jquery": "^3.3.1"
   }
 }
