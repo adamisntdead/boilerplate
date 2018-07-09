@@ -36,6 +36,7 @@
     "tinyify": "^2.4.3"
   },
   "dependencies": {
+    "gulp-inject": "^4.3.2",
     "jquery": "1.11.3"
   }
 }

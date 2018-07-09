@@ -137,6 +137,9 @@ gulp.task('critical', () =>
 // -------------------------------------
 
 gulp.task('html', () => {
+  // sources to inject script/link tags for
+  const source = gulp.src([`${settings.css.dest}/*.min.css`, `${settings.js.dest}/*.min.js`])
+
   return gulp
     .src(settings.html.source)
     .pipe(
@@ -147,11 +150,16 @@ gulp.task('html', () => {
     )
     .pipe(plugins.inlineImagesize())
     .pipe(plugins.htmlBeautify(settings.html.formatting))
+    .pipe(plugins.inject(source, { 
+      addRootSlash: true,
+      ignorePath: 'dist'
+    }))
     .pipe(gulp.dest(settings.html.dest));
 });
 
-gulp.task('html:dev', () =>
-  gulp
+gulp.task('html:dev', () => {
+  const source = gulp.src([`${settings.css.dest}/*.css`, `${settings.js.dest}/*.js`, `!${settings.css.dest}/*.min.css`, `!${settings.js.dest}/*.min.js`])
+  return gulp
     .src(settings.html.source)
     .pipe(
       plugins.fileInclude({
@@ -159,8 +167,12 @@ gulp.task('html:dev', () =>
         basepath: 'src'
       })
     )
+    .pipe(plugins.inject(source, { 
+      addRootSlash: true,
+      ignorePath: 'dist'
+    }))
     .pipe(gulp.dest(settings.html.dest))
-);
+});
 
 gulp.task('html:format', () => {
   return gulp
@@ -284,7 +296,7 @@ gulp.task('browser-sync', () => {
 
 gulp.task(
   'default',
-  gulp.series(gulp.parallel('css', 'html', 'js', 'move'), 'images')
+  gulp.series(gulp.parallel('css', 'js', 'move'), 'html', 'images')
 );
 // gulp.task('default', ['css', 'html', 'js', 'move', 'images']);
 
