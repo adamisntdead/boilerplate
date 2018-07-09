@@ -99,7 +99,7 @@ gulp.task('css:dev', () => {
     .pipe(gulp.dest(settings.css.dest));
 });
 
-gulp.task('css:watch', ['css:dev'], () => {
+gulp.task('css:watch', () => {
   return plugins
     .watchSass(settings.css.source, {
       includePaths: ['node_modules'],
@@ -150,7 +150,7 @@ gulp.task('html', () => {
     .pipe(gulp.dest(settings.html.dest));
 });
 
-gulp.task('html:dev', () => {
+gulp.task('html:dev', () =>
   gulp
     .src(settings.html.source)
     .pipe(
@@ -159,8 +159,8 @@ gulp.task('html:dev', () => {
         basepath: 'src'
       })
     )
-    .pipe(gulp.dest(settings.html.dest));
-});
+    .pipe(gulp.dest(settings.html.dest))
+);
 
 gulp.task('html:format', () => {
   return gulp
@@ -169,15 +169,13 @@ gulp.task('html:format', () => {
     .pipe(gulp.dest('src'));
 });
 
-gulp.task('html:watch', ['html:dev'], () => {
-  gulp.watch(settings.html.watch, ['html:dev']);
-});
+gulp.task('html:watch', () => gulp.watch(settings.html.watch, gulp.series('html:dev')));
 
 // -------------------------------------
 //   Task: JS
 // -------------------------------------
 
-gulp.task('js', () => {
+gulp.task('js', () =>
   gulp
     .src(settings.js.entry)
     .pipe(
@@ -189,15 +187,15 @@ gulp.task('js', () => {
       })
     )
     .pipe(plugins.rename({ extname: '.min.js' }))
-    .pipe(gulp.dest(settings.js.dest));
-});
+    .pipe(gulp.dest(settings.js.dest))
+);
 
-gulp.task('js:dev', () => {
+gulp.task('js:dev', () =>
   gulp
     .src(settings.js.entry)
     .pipe(plugins.bro())
-    .pipe(gulp.dest(settings.js.dest));
-});
+    .pipe(gulp.dest(settings.js.dest))
+);
 
 gulp.task('js:format', () => {
   return gulp
@@ -206,9 +204,7 @@ gulp.task('js:format', () => {
     .pipe(gulp.dest('src'));
 });
 
-gulp.task('js:watch', ['js:dev'], () => {
-  gulp.watch(settings.js.source, ['js:dev']);
-});
+gulp.task('js:watch', () => gulp.watch(settings.js.source, gulp.series('js:dev')));
 
 // -------------------------------------
 //   Task: Move
@@ -224,9 +220,9 @@ gulp.task('move', () => {
   return plugins.mergeStream(nonProcessed, vendor);
 });
 
-gulp.task('move:watch', ['move'], () => {
-  return gulp.watch(['src/*/*', '!src/{js,scss,img,inc}/**/*'], ['move']);
-});
+gulp.task('move:watch', () =>
+  gulp.watch(['src/*/*', '!src/{js,scss,img,inc}/**/*'], gulp.series('move'))
+);
 
 // -------------------------------------
 //   Task: Images
@@ -251,10 +247,10 @@ gulp.task('images:dev', () =>
   gulp.src('src/img/**/*').pipe(gulp.dest('dist/img'))
 );
 
-gulp.task('images:watch', ['images:dev'], () =>
-  gulp.watch('src/img/**/*').on('change', file => {
+gulp.task('images:watch', () =>
+  gulp.watch('src/img/**/*').on('change', path => {
     gulp
-      .src(file.path)
+      .src(path)
       .pipe(
         plugins.imagemin([
           plugins.imagemin.jpegtran({ progressive: true }),
@@ -275,36 +271,53 @@ gulp.task('images:watch', ['images:dev'], () =>
 gulp.task('browser-sync', () => {
   plugins.browserSync.init({ server: { baseDir: 'dist', directory: true } });
 
-  gulp.watch(['dist/**/*', '!dist/**/*.css']).on('change', plugins.browserSync.reload);
+  gulp
+    .watch(['dist/**/*', '!dist/**/*.css'])
+    .on('change', plugins.browserSync.reload);
 });
 
 // -------------------------------------
 //   Task: Default
 // -------------------------------------
+// This talk involves compiling the html, css and javascript,
+// moving fonts and other static assets and then optimizing images
 
-gulp.task('default', ['css', 'html', 'js', 'move', 'images']);
+gulp.task(
+  'default',
+  gulp.series(gulp.parallel('css', 'html', 'js', 'move'), 'images')
+);
+// gulp.task('default', ['css', 'html', 'js', 'move', 'images']);
 
 // -------------------------------------
 //   Task: Dev
 // -------------------------------------
 
-gulp.task('dev', ['css:dev', 'html:dev', 'js:dev', 'move', 'images:dev']);
+gulp.task(
+  'dev',
+  gulp.parallel('css:dev', 'html:dev', 'js:dev', 'move', 'images:dev')
+);
 
 // -------------------------------------
 //   Task: Watch
 // -------------------------------------
 
-gulp.task('watch', [
-  'css:watch',
-  'html:watch',
-  'js:watch',
-  'move:watch',
-  'images:watch',
-  'browser-sync'
-]);
+gulp.task(
+  'watch',
+  gulp.series(
+    'dev',
+    gulp.parallel(
+      'css:watch',
+      'html:watch',
+      'js:watch',
+      'move:watch',
+      'images:watch',
+      'browser-sync'
+    )
+  )
+);
 
 // -------------------------------------
 //   Task: Format
 // -------------------------------------
 
-gulp.task('format', ['js:format', 'html:format']);
+gulp.task('format', gulp.parallel('js:format', 'html:format'));
