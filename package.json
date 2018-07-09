@@ -37,6 +37,6 @@
   },
   "dependencies": {
     "gulp-inject": "^4.3.2",
-    "jquery": "1.11.3"
+    "jquery": "^3.3.1"
   }
 }
