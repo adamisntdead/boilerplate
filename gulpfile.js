@@ -299,7 +299,7 @@ gulp.task('browser-sync', () => {
 // This talk involves compiling the html, css and javascript,
 // moving fonts and other static assets and then optimizing images
 
-gulp.task('default', gulp.series(gulp.parallel('css', 'js', 'move'), 'html', 'images'))
+gulp.task('default', gulp.series(gulp.parallel('css', 'js', 'move'), 'html', 'images', 'critical'))
 // gulp.task('default', ['css', 'html', 'js', 'move', 'images']);
 
 // -------------------------------------
