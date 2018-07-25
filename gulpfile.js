@@ -155,7 +155,8 @@ gulp.task('html', () => {
     .pipe(
       plugins.inject(source, {
         addRootSlash: true,
-        ignorePath: 'dist'
+        ignorePath: 'dist',
+        removeTags: true
       })
     )
     .pipe(gulp.dest(settings.html.dest))
@@ -179,7 +180,8 @@ gulp.task('html:dev', () => {
     .pipe(
       plugins.inject(source, {
         addRootSlash: true,
-        ignorePath: 'dist'
+        ignorePath: 'dist',
+        removeTags: true
       })
     )
     .pipe(gulp.dest(settings.html.dest))
