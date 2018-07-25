@@ -43,13 +43,13 @@ const plugins = require('gulp-load-plugins')({
 
 const settings = {
   css: {
-    source: 'src/scss/**/*.{scss, sass, css}',
-    dest: 'dist/css'
+    source: './src/scss/**/*.{scss, sass, css}',
+    dest: './dist/css'
   },
   html: {
-    watch: 'src/**/*.html',
-    source: 'src/*.html',
-    dest: 'dist',
+    watch: './src/**/*.html',
+    source: './src/*.html',
+    dest: './dist',
     formatting: {
       indent: 4,
       indent_char: ' ',
@@ -59,9 +59,9 @@ const settings = {
     }
   },
   js: {
-    source: 'src/js/**/*.js',
-    entry: 'src/js/main.js',
-    dest: 'dist/js'
+    source: './src/js/**/*.js',
+    entry: './src/js/main.js',
+    dest: './dist/js'
   }
 }
 
