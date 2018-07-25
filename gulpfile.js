@@ -204,7 +204,7 @@ gulp.task('js', () =>
     .pipe(
       plugins.bro({
         plugin: [plugins.tinyify],
-        transform: [plugins.babelify.configure({ presets: ['@babel/preset-es2015'] })]
+        transform: [plugins.babelify.configure({ presets: ['@babel/preset-env'] })]
       })
     )
     .pipe(plugins.rename({ extname: '.min.js' }))

@@ -15,7 +15,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.0.0-beta.51",
-    "@babel/preset-es2015": "^7.0.0-beta.51",
+    "@babel/preset-env": "^7.0.0-beta.54",
     "babelify": "^9.0.0",
     "browser-sync": "^2.24.5",
     "critical": "^1.3.3",
