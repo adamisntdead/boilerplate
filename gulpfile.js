@@ -34,12 +34,12 @@
 //
 // -------------------------------------
 
-const gulp = require('gulp');
+const gulp = require('gulp')
 const plugins = require('gulp-load-plugins')({
   lazy: true,
   overridePattern: false,
   pattern: '{critical,tinyify,babelify,browser-sync,merge-stream}'
-});
+})
 
 const settings = {
   css: {
@@ -63,7 +63,7 @@ const settings = {
     entry: 'src/js/main.js',
     dest: 'dist/js'
   }
-};
+}
 
 // -------------------------------------
 //   Task: CSS
@@ -83,8 +83,8 @@ gulp.task('css', () => {
     .pipe(gulp.dest(settings.css.dest)) // Pipe unminified
     .pipe(plugins.csso())
     .pipe(plugins.rename({ extname: '.min.css' }))
-    .pipe(gulp.dest(settings.css.dest));
-});
+    .pipe(gulp.dest(settings.css.dest))
+})
 
 gulp.task('css:dev', () => {
   return gulp
@@ -97,8 +97,8 @@ gulp.task('css:dev', () => {
         .on('error', plugins.sass.logError)
     )
     .pipe(plugins.autoprefixer())
-    .pipe(gulp.dest(settings.css.dest));
-});
+    .pipe(gulp.dest(settings.css.dest))
+})
 
 gulp.task('css:watch', () => {
   return plugins
@@ -115,8 +115,8 @@ gulp.task('css:watch', () => {
     )
     .pipe(plugins.autoprefixer())
     .pipe(gulp.dest(settings.css.dest))
-    .pipe(plugins.browserSync.reload({ stream: true }));
-});
+    .pipe(plugins.browserSync.reload({ stream: true }))
+})
 
 gulp.task('critical', () =>
   gulp
@@ -129,10 +129,10 @@ gulp.task('critical', () =>
       })
     )
     .on('error', err => {
-      console.error(err.message);
+      console.error(err.message)
     })
     .pipe(gulp.dest('dist'))
-);
+)
 
 // -------------------------------------
 //   Task: HTML
@@ -152,15 +152,22 @@ gulp.task('html', () => {
     )
     .pipe(plugins.inlineImagesize())
     .pipe(plugins.htmlBeautify(settings.html.formatting))
-    .pipe(plugins.inject(source, { 
-      addRootSlash: true,
-      ignorePath: 'dist'
-    }))
-    .pipe(gulp.dest(settings.html.dest));
-});
+    .pipe(
+      plugins.inject(source, {
+        addRootSlash: true,
+        ignorePath: 'dist'
+      })
+    )
+    .pipe(gulp.dest(settings.html.dest))
+})
 
 gulp.task('html:dev', () => {
-  const source = gulp.src([`${settings.css.dest}/*.css`, `${settings.js.dest}/*.js`, `!${settings.css.dest}/*.min.css`, `!${settings.js.dest}/*.min.js`])
+  const source = gulp.src([
+    `${settings.css.dest}/*.css`,
+    `${settings.js.dest}/*.js`,
+    `!${settings.css.dest}/*.min.css`,
+    `!${settings.js.dest}/*.min.js`
+  ])
   return gulp
     .src(settings.html.source)
     .pipe(
@@ -169,21 +176,23 @@ gulp.task('html:dev', () => {
         basepath: 'src'
       })
     )
-    .pipe(plugins.inject(source, { 
-      addRootSlash: true,
-      ignorePath: 'dist'
-    }))
+    .pipe(
+      plugins.inject(source, {
+        addRootSlash: true,
+        ignorePath: 'dist'
+      })
+    )
     .pipe(gulp.dest(settings.html.dest))
-});
+})
 
 gulp.task('html:format', () => {
   return gulp
     .src(settings.html.source)
     .pipe(plugins.htmlBeautify(settings.html.formatting))
-    .pipe(gulp.dest('src'));
-});
+    .pipe(gulp.dest('src'))
+})
 
-gulp.task('html:watch', () => gulp.watch(settings.html.watch, gulp.series('html:dev')));
+gulp.task('html:watch', () => gulp.watch(settings.html.watch, gulp.series('html:dev')))
 
 // -------------------------------------
 //   Task: JS
@@ -195,48 +204,44 @@ gulp.task('js', () =>
     .pipe(
       plugins.bro({
         plugin: [plugins.tinyify],
-        transform: [
-          plugins.babelify.configure({ presets: ['@babel/preset-es2015'] })
-        ]
+        transform: [plugins.babelify.configure({ presets: ['@babel/preset-es2015'] })]
       })
     )
     .pipe(plugins.rename({ extname: '.min.js' }))
     .pipe(gulp.dest(settings.js.dest))
-);
+)
 
 gulp.task('js:dev', () =>
   gulp
     .src(settings.js.entry)
     .pipe(plugins.bro())
     .pipe(gulp.dest(settings.js.dest))
-);
+)
 
 gulp.task('js:format', () => {
   return gulp
     .src('src/**/*.js')
     .pipe(plugins.prettier({ singleQuote: true }))
-    .pipe(gulp.dest('src'));
-});
+    .pipe(gulp.dest('src'))
+})
 
-gulp.task('js:watch', () => gulp.watch(settings.js.source, gulp.series('js:dev')));
+gulp.task('js:watch', () => gulp.watch(settings.js.source, gulp.series('js:dev')))
 
 // -------------------------------------
 //   Task: Move
 // -------------------------------------
 
 gulp.task('move', () => {
-  const nonProcessed = gulp
-    .src(['src/*/*', '!src/{js,scss,img,inc}/**/*'])
-    .pipe(gulp.dest('dist'));
+  const nonProcessed = gulp.src(['src/*/*', '!src/{js,scss,img,inc}/**/*']).pipe(gulp.dest('dist'))
 
-  const vendor = gulp.src('src/**/vendor/**/*').pipe(gulp.dest('dist'));
+  const vendor = gulp.src('src/**/vendor/**/*').pipe(gulp.dest('dist'))
 
-  return plugins.mergeStream(nonProcessed, vendor);
-});
+  return plugins.mergeStream(nonProcessed, vendor)
+})
 
 gulp.task('move:watch', () =>
   gulp.watch(['src/*/*', '!src/{js,scss,img,inc}/**/*'], gulp.series('move'))
-);
+)
 
 // -------------------------------------
 //   Task: Images
@@ -255,11 +260,9 @@ gulp.task('images', () =>
       ])
     )
     .pipe(gulp.dest('dist/img'))
-);
+)
 
-gulp.task('images:dev', () =>
-  gulp.src('src/img/**/*').pipe(gulp.dest('dist/img'))
-);
+gulp.task('images:dev', () => gulp.src('src/img/**/*').pipe(gulp.dest('dist/img')))
 
 gulp.task('images:watch', () =>
   gulp.watch('src/img/**/*').on('change', path => {
@@ -274,21 +277,19 @@ gulp.task('images:watch', () =>
           })
         ])
       )
-      .pipe(gulp.dest('dist/img'));
+      .pipe(gulp.dest('dist/img'))
   })
-);
+)
 
 // -------------------------------------
 //   Task: browser-sync
 // -------------------------------------
 
 gulp.task('browser-sync', () => {
-  plugins.browserSync.init({ server: { baseDir: 'dist', directory: true } });
+  plugins.browserSync.init({ server: { baseDir: 'dist', directory: true } })
 
-  gulp
-    .watch('dist/**/*')
-    .on('change', plugins.browserSync.reload);
-});
+  gulp.watch('dist/**/*').on('change', plugins.browserSync.reload)
+})
 
 // -------------------------------------
 //   Task: Default
@@ -296,20 +297,14 @@ gulp.task('browser-sync', () => {
 // This talk involves compiling the html, css and javascript,
 // moving fonts and other static assets and then optimizing images
 
-gulp.task(
-  'default',
-  gulp.series(gulp.parallel('css', 'js', 'move'), 'html', 'images')
-);
+gulp.task('default', gulp.series(gulp.parallel('css', 'js', 'move'), 'html', 'images'))
 // gulp.task('default', ['css', 'html', 'js', 'move', 'images']);
 
 // -------------------------------------
 //   Task: Dev
 // -------------------------------------
 
-gulp.task(
-  'dev',
-  gulp.parallel('css:dev', 'html:dev', 'js:dev', 'move', 'images:dev')
-);
+gulp.task('dev', gulp.parallel('css:dev', 'html:dev', 'js:dev', 'move', 'images:dev'))
 
 // -------------------------------------
 //   Task: Watch
@@ -328,10 +323,10 @@ gulp.task(
       'browser-sync'
     )
   )
-);
+)
 
 // -------------------------------------
 //   Task: Format
 // -------------------------------------
 
-gulp.task('format', gulp.parallel('js:format', 'html:format'));
+gulp.task('format', gulp.parallel('js:format', 'html:format'))
