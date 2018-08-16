@@ -1,0 +1,225 @@
+/*------------------------------------
+    @OBJECTS #FLEX-GRID
+------------------------------------*/
+
+/* by Nikola Jovanovic - coderman, v1.0, 2017 */
+
+// Total columns
+$cols: 12;
+
+// Break points
+$breaks: ($xs "xs") ($sm "sm") ($md "md") ($lg "lg");
+
+.flex {
+    display: flex;
+}
+
+.wrapper,
+.container {
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    max-width: 1024px;
+    padding: 0 $gutter-width;
+}
+
+.row {
+	display: flex;
+	flex: 0 1 auto;
+	flex-direction: row;
+	flex-wrap: wrap;
+
+	margin-left: -$gutter-width;
+	margin-right: -$gutter-width;
+
+	> * {
+		padding: 0 $gutter-width;
+	}
+
+}
+
+.column {
+	@extend .row;
+	flex-direction: column;
+}
+
+// General column styles
+[class^="col-"] {
+    width: 100%;
+    box-sizing: border-box;
+    flex: 0 0 auto;
+
+    &:before,
+    &:after {
+    	display: none !important;
+    }
+}
+
+.row {
+    flex-direction: row;
+}
+
+.row-rev {
+	  flex-direction: row-reverse;
+}
+
+.column {
+    flex-direction: column;
+
+}
+
+.column-rev {
+  flex-direction: column-reverse;    
+}
+
+// Columns
+
+// Extra small screen solumns - below 480px;
+.xs {
+  width: 100%;
+}
+
+@for $i from 1 through $cols {
+    .col-#{$i} {
+        width: ($i / 12 * 100%);
+    }
+}
+
+// Columns above 480px width
+@each $point in $breaks {
+    @for $i from 1 through $cols {
+        .col-#{nth($point,2)}-#{$i} {
+            @media (min-width: #{nth($point,1)}) {
+                width: ($i / 12 * 100%);
+
+            }
+        }
+    }
+}   
+
+
+// Offsets
+@for $i from 1 through $cols {
+    .col-offset-#{$i} {
+        margin-left: ($i / 12 * 100%);
+    }
+}
+
+// Column offsets
+@each $point in $breaks {
+    @for $i from 0 through $cols {
+        .col-#{nth($point,2)}-offset-#{$i} {
+            @media (min-width: #{nth($point,1)}) {
+                margin-left: ($i / 12 * 100%);
+            }
+        }
+    }
+}   
+
+
+// Justify content
+// Default
+.start {
+    justify-content: flex-start;
+}
+.center {
+    justify-content: center;
+}
+.end {
+    justify-content: flex-end;
+}
+.around {
+    justify-content: space-around;
+}
+.between {
+    justify-content: space-between;
+}
+
+// Breakpoints
+@each $point in $breaks {
+    @media (min-width: #{nth($point,1)}) {
+        .start-#{nth($point,2)} {
+            justify-content: flex-start;
+        }
+
+        .center-#{nth($point,2)} {
+            justify-content: center;
+        }
+
+        .end-#{nth($point,2)} {
+            justify-content: flex-end;
+        }
+
+        .around-#{nth($point,2)} {
+            justify-content: space-around;
+        }
+
+        .between-#{nth($point,2)} {
+            justify-content: space-between;
+        }
+
+        .column-#{nth($point,2)} {
+            flex-direction: column;
+        }
+
+        .row-#{nth($point,2)} {
+            flex-direction: row;
+        }
+
+        .column-rev#{nth($point,2)} {
+            flex-direction: column-reverse;
+        }
+
+        .row-rev#{nth($point,2)} {
+            flex-direction: row-reverse;
+        }
+    }
+}   
+
+
+// Align items
+// Default
+.stretch {
+    align-items: stretch;
+}
+.top {
+    align-items: flex-start;
+}
+.middle {
+    align-items: center;
+}
+.bottom {
+    align-items: flex-end;
+}
+.first {
+    order: -1;
+}
+.last {
+    order: 1;
+}
+
+// Breakpoints
+@each $point in $breaks {
+    @media (min-width: #{nth($point,1)}) {
+        .stretch-#{nth($point,2)} {
+            align-items: stretch;
+        }
+
+        .top-#{nth($point,2)} {
+            align-items: flex-start;
+        }
+
+        .middle-#{nth($point,2)} {
+            align-items: center;
+        }
+
+        .bottom-#{nth($point,2)} {
+            align-items: flex-end;
+        }
+
+        .base-#{nth($point,2)} {
+            align-items: baseline;
+        }
+    }
+}   
+

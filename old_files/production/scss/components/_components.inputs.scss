@@ -1,0 +1,31 @@
+/*------------------------------------
+	@COMPONENTS #INPUTS
+------------------------------------*/
+
+.textbox {
+
+	/* iOS reset */
+	-webkit-appearance: none !important;
+	border-radius: 0;
+	box-shadow: none;
+
+	/*PLACEHOLDER*/
+	&::-webkit-input-placeholder {
+	   color: $color-placeholder;
+	}
+
+	&:-moz-placeholder { /* Firefox 18- */
+	   color: $color-placeholder; 
+	   opacity: 1; 
+	}
+
+	&::-moz-placeholder {  /* Firefox 19+ */
+	   color: $color-placeholder;
+	   opacity: 1;  
+	}
+
+	&:-ms-input-placeholder {  
+	   color: $color-placeholder;  
+	}
+
+}

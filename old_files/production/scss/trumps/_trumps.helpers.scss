@@ -1,0 +1,226 @@
+/*------------------------------------
+	@TRUMPS #HELPERS
+------------------------------------*/
+
+// You forgot the image alt tag
+img {
+	&:not([alt]) {
+		border: 2px dashed #c00;
+	}
+}
+
+//SPACING AND PADDING
+
+// Helper classes that proivde margin spacing:
+
+.clean {
+	margin: 0;
+	padding: 0;
+}
+
+
+// SPACING AND PADDING RESPONSIVE
+$multiplier: 10px;
+
+// Default
+@for $i from 0 through 8 {
+    .p-#{$i}x {
+      	padding: ($i * $multiplier);
+	}
+	  
+  	.pt-#{$i}x {
+      	padding-top: ($i * $multiplier);
+	}
+
+  	.pb-#{$i}x {
+      	padding-bottom: ($i * $multiplier);
+	}
+
+  	.px-#{$i}x {
+      	padding-left: ($i * $multiplier);
+      	padding-right: ($i * $multiplier);
+	}
+
+  	.py-#{$i}x {
+      	padding-bottom: ($i * $multiplier);
+      	padding-top: ($i * $multiplier);
+	}
+
+    .m-#{$i}x {
+      	margin: ($i * $multiplier);
+	}
+	  
+  	.mb-#{$i}x {
+      	margin-bottom: ($i * $multiplier);
+	}
+
+  	.mx-#{$i}x {
+      	margin-left: ($i * $multiplier);
+      	margin-right: ($i * $multiplier);
+	}
+
+  	.my-#{$i}x {
+      	margin-bottom: ($i * $multiplier);
+      	margin-top: ($i * $multiplier);
+	}
+}
+
+// Above mobile breakpoint
+@each $point in $breaks {
+	@for $i from 0 through 8 {
+	    .p-#{nth($point,2)}-#{$i}x {
+	      	@media (min-width: #{nth($point,1)}) {  		
+		      	padding: ($i * $multiplier);
+	      	}
+		}
+		  
+      	.pt-#{nth($point,2)}-#{$i}x {
+	      	@media (min-width: #{nth($point,1)}) {
+		      	padding-top: ($i * $multiplier);
+	      	}
+		}
+
+      	.pb-#{nth($point,2)}-#{$i}x {
+	      	@media (min-width: #{nth($point,1)}) {
+		      	padding-bottom: ($i * $multiplier);
+	      	}
+		}
+
+      	.px-#{nth($point,2)}-#{$i}x {
+	      	@media (min-width: #{nth($point,1)}) {
+		      	padding-left: ($i * $multiplier);
+		      	padding-right: ($i * $multiplier);
+	      	}
+		}
+
+      	.py-#{nth($point,2)}-#{$i}x {
+	      	@media (min-width: #{nth($point,1)}) {
+		      	padding-bottom: ($i * $multiplier);
+		      	padding-top: ($i * $multiplier);
+	      	}
+		}
+
+	    .m-#{nth($point,2)}-#{$i}x {
+	      	@media (min-width: #{nth($point,1)}) {  		
+		      	margin: ($i * $multiplier);
+	      	}
+		}
+
+      	.mb-#{nth($point,2)}-#{$i}x {
+	      	@media (min-width: #{nth($point,1)}) {
+		      	margin-bottom: ($i * $multiplier);
+	      	}
+		}
+
+      	.mx-#{nth($point,2)}-#{$i}x {
+	      	@media (min-width: #{nth($point,1)}) {
+		      	margin-left: ($i * $multiplier);
+		      	margin-right: ($i * $multiplier);
+	      	}
+		}
+
+      	.my-#{nth($point,2)}-#{$i}x {
+	      	@media (min-width: #{nth($point,1)}) {
+		      	margin-bottom: ($i * $multiplier);
+		      	margin-top: ($i * $multiplier);
+	      	}
+		}
+ 	}
+}	
+
+//NO TRANSITION CLASS
+.no-transition {
+    &,
+    * {
+        -webkit-transition: none !important;
+        -moz-transition: none !important;
+        -ms-transition: none !important;
+        transition: none !important;
+    }
+}
+
+
+//QUICK FLOATING
+.float-left {
+    float: left !important;
+}
+
+.float-right {
+    float: right !important;
+}
+
+//QUICK VERTICAL ALIGNMENT
+.align-top {
+    vertical-align: top !important;
+}
+
+.align-middle {
+    vertical-align: middle !important;
+}
+
+.align-bottom {
+    vertical-align: bottom !important;
+}
+
+//QUICK TEXT ALIGNING
+.text-center {
+    text-align: center !important;
+}
+
+.text-left {
+    text-align: left !important;
+}
+
+.text-right {
+    text-align: right !important;
+}
+
+// RESPONSIVE TEXT ALIGN
+// ex: text + {breakpoint} + {left,right,center}
+
+@each $point in $breaks {
+	.text-center-#{nth($point,2)} {
+      	@media (min-width: #{nth($point,1)}) {  		
+	      	text-align: center !important;
+      	}
+	}
+
+	.text-left-#{nth($point,2)} {
+      	@media (min-width: #{nth($point,1)}) {  		
+	      	text-align: left !important;
+      	}
+	}
+
+	.text-right-#{nth($point,2)} {
+      	@media (min-width: #{nth($point,1)}) {  		
+	      	text-align: right !important;
+      	}
+	}
+}	
+
+
+// RESPONSIVE UTILITIES
+
+// Display
+
+// Hide down (non-mobile first)
+// Example: .hidden-xs-down --> hide element on screen widths up to $xs
+// breakpoint
+@each $point in $breaks {
+  .hidden-#{nth($point,2)}-down {
+    @media (max-width: #{nth($point,1)-1}) {
+	     display: none !important;
+  	}
+  }
+}	
+
+// Hide up (mobile first breakpoints)
+// Example: .hidden-sm --> hide element on screen widths above $sm
+// breakpoint
+@each $point in $breaks {
+  .hidden-#{nth($point,2)} {
+    @media (min-width: #{nth($point,1)}) {
+	     display: none !important;
+  	}
+  }
+}	

@@ -1,0 +1,24 @@
+/*------------------------------------
+	@COMPONENTS #SECTIONS
+------------------------------------*/
+
+.section {
+	padding: 84px 0;
+	margin: 10px 0;
+	border: 1px solid $color-border;
+	border-left: none;
+	border-right: none;
+}
+
+.section--sm {
+	padding: 22px 0;
+}
+
+.section--md {
+	padding: 36px 0;
+}
+
+.section--lg {
+	padding: 140px 0;
+	padding-bottom: 60px;
+}

@@ -1,0 +1,63 @@
+/*------------------------------------
+    @BASE #FORMS
+------------------------------------*/
+
+button:hover,
+input[type="submit"]:hover,
+label {
+    cursor: pointer;
+}
+
+textarea {
+    margin: 0;             /* removing margin in Mozilla */
+    overflow: auto;        /* for IE and older browsers */
+}
+
+/* align checkboxes, radios, text inputs with their label */
+input[type="radio"] {
+    vertical-align: text-bottom;
+}
+
+input[type="checkbox"] {
+    vertical-align: bottom;
+    *vertical-align: baseline;
+}
+
+//removing webkit outline
+input:focus,
+textarea:focus,
+button:focus {
+    outline: none;
+}
+
+//removing odd button padding/margin in Mozilla
+button::-moz-focus-inner,
+input[type="submit"]::-moz-focus-inner {
+    border: 0;
+    padding: 0;
+}
+
+
+select {
+    border: none;
+    border-radius: 0;
+
+}
+
+select {
+    /*for firefox*/
+    -moz-appearance: none;
+    /*for chrome*/
+    -webkit-appearance:none;
+}
+
+/*for IE10*/
+select::-ms-expand {
+    display: none;
+}
+
+/*Remove outline Firefox select*/
+select:-moz-focusring {
+    color: transparent;
+    text-shadow: 0 0 0 #000;
+}

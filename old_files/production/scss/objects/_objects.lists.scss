@@ -1,0 +1,32 @@
+/*------------------------------------
+    @OBJECTS #LISTS
+------------------------------------*/
+
+.list-inline {
+    font-size: 0;
+    list-style-type: none;
+    > li {
+        display: inline-block;
+        font-size: $font-size;
+        padding: 0 20px;
+    }
+}
+
+.list-pagination {
+    > li {
+        &:first-child {
+            padding-left: 0;
+
+            &:before {
+                display: none;
+            }
+        }
+
+        &:before {
+            display: inline-block;
+            content: '/';
+            margin-left: -35px;
+            margin-right: 5px;
+        }
+    }
+}

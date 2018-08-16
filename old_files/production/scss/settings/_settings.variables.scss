@@ -1,0 +1,70 @@
+/*------------------------------------
+    @SETTINGS #VARIABLES
+------------------------------------*/
+
+/* FONT STACKS */
+$sans-serif: "Helvetica Neue",
+             Helvetica,
+             Arial, 
+             sans-serif;
+
+$serif: Georgia,
+        "Times New Roman",
+        Times, 
+        serif;
+
+$cursive: "Brush Script MT", 
+          cursive;
+
+$monospace: "Bitstream Vera Sans Mono",
+            Consolas, 
+            Courier, 
+            monospace;
+
+$system:  -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          Roboto,
+          Helvetica,
+          Arial,
+          sans-serif,
+          "Apple Color Emoji",
+          "Segoe UI Emoji",
+          "Segoe UI Symbol";
+
+/* COLOR DEFINITIONS */
+$blue:        #4990e2;
+$grey:        #979797;
+$orange:      #FF4F00;
+$red:         red;
+
+/* COLOR SWATCHES */
+$primary: $blue;
+$alt:     $orange;
+$ter:     $red;
+
+
+/* BASE STYLES */
+$base-font: $system;
+$font-size:  16px;
+$line-height: 1.24;
+// colors
+$bgr: #fff;
+$color-text: #000;
+$color-link: $primary;
+$color-hover: $alt;
+$color-placeholder: $red;
+$color-border: $grey;
+
+
+/* MEDIA BREAKPOINTS */
+$xs:  480px;
+$sm:  760px;
+$md: 1020px;
+$lg:   1200px;
+
+/* LAYOUT */
+$border-radius: 8px;
+$space: 20px;
+$gutter-width: 15px !default; // side padding of the container elements
+

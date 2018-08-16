@@ -1,0 +1,70 @@
+/*------------------------------------
+    @OBJECTS #INPUTS
+------------------------------------*/
+
+input {
+    -webkit-appearance: none;       /* removing inner shadow on iOS inputs */
+    -webkit-font-smoothing: inherit;
+    background: none;
+    box-shadow: none !important;
+    font-family: $base-font;
+    font-size: $font-size;
+    border-radius: 0;                      // remove the iOS input radius
+    
+    border: 1px solid $color-border;
+
+    &:hover, &:focus {
+        border-color: $alt;
+    }
+
+    &:invalid {
+        box-shadow: none;  /* fixes mozilla red outline (shadow) */
+    }
+
+    &[readonly] {
+        cursor: text;
+    }
+
+    &::-ms-clear {
+        display: none; /* remove IE clear icon */
+    }
+
+    // /*PLACEHOLDER*/
+    // &::-webkit-input-placeholder {
+    //    color: $placeholder-clr;
+    // }
+
+    // &:-moz-placeholder { /* Firefox 18- */
+    //    color: $placeholder-clr; 
+    //    opacity: 1; 
+    // }
+
+    // &::-moz-placeholder {  /* Firefox 19+ */
+    //    color: $placeholder-clr;
+    //    opacity: 1;  
+    // }
+
+    // &:-ms-input-placeholder {  
+    //    color: $placeholder-clr;  
+    // }
+}
+
+input[type="search"] {
+    -webkit-appearance: textfield;
+}
+
+input[type="search"]::-webkit-search-decoration,
+input[type="search"]::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+}
+
+/* IE select reset */
+select::-ms-expand {
+    display: none;
+}
+
+/* FF remove outline from select */
+select:-moz-focusring {
+    color: transparent;
+    text-shadow: 0 0 0 #000;
+}

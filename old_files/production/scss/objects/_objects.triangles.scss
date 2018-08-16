@@ -1,0 +1,36 @@
+/*------------------------------------
+    @OBJECTS #TRIANGLES
+------------------------------------*/
+
+.triangle-bl {
+  @include triangle-responsive(98.6vw, 8, bottom-left, red);
+}  
+
+.triangle-br {
+  @include triangle-responsive(98.6vw, 8, bottom-right, red);
+} 
+
+.triangle {
+	position: relative;
+	padding-top: 36.397023%;
+	overflow: hidden;
+}
+
+.triangle__body {
+	background-color: purple;
+	color: #fff;
+	padding: 20px;
+	position: relative;
+	background: linear-gradient(to right, #c9de96 0%,#398235 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+}
+
+
+// Triangle bottom-right (right angle)
+.triangle__header--br { 
+	@include triangle-header(-20deg, red); // angle [degrees], background (can be gradient too)
+}
+
+// Triangle bottom-left (right angle)
+.triangle__header--bl { 
+	@include triangle-header(20deg, red); // angle [degrees], background (can be gradient too)
+}

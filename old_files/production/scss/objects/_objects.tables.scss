@@ -1,0 +1,15 @@
+/*------------------------------------
+    @OBJECTS #TABLES
+------------------------------------*/
+
+table,
+.table {
+    width: 100%;
+}
+
+.table-responsive {
+	overflow-x: auto;
+	> table {
+		min-width: 700px;
+	}
+}

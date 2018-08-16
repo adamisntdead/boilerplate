@@ -1,0 +1,76 @@
+/*------------------------------------
+	@COMPONENTS #LARGE-BANNER
+--------------------------------------*/
+
+.large-banner {
+	min-height: 500px;
+	@include clearfix;
+	position: relative;
+
+	.wrapper {
+		max-width: 960px;
+	}
+	
+	.bg-image {
+		display: block;
+		height: 100%;
+		left: 0;
+		overflow: hidden;
+		position: absolute;
+		top: 0;
+		width: 100%;
+		z-index: 0;
+		
+		img {
+			bottom: -9999px;
+			display: block;
+			left: -9999px;
+			margin: auto;
+			min-height: 100%;
+			min-width: 100%;
+			position: absolute;
+			right: -9999px;
+			top: -9999px;
+		}
+		
+		&:after {
+			background: linear-gradient(to bottom, rgba(#5C258D, 0.3) 0%, rgba(#4389A2, 0.5) 100%); /* W3C */
+			content: "";
+			height: 100%;
+			left: 0;
+			position: absolute;
+			top: 0;
+			width: 100%;
+		}
+	}
+	
+	.overlay {
+		@include clearfix;
+		padding: 70px 20px 50px;
+		position: relative;
+		text-align: center;
+		z-index: 1;
+		
+		> * {
+			color: #fff;
+		}
+
+		p {
+			max-width: 600px;
+		}
+
+		@media (min-width: $sm) {
+			min-height: 600px;
+			padding: 140px 30px 50px;
+			
+			h1 {
+				margin: 20px 0 40px;
+			}
+			
+			p {
+				margin: 40px auto;
+				max-width: 800px;
+			}
+		}
+	}
+}

@@ -1,0 +1,180 @@
+/* Math functions */
+@import "mathsass/_math.scss";
+
+
+%form-resets {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border: 0;
+    border-radius: 0;
+    outline: none;
+}
+
+/* Details about the triangle-responsive mixin:
+ $width is the triangle's width in vw (e.g. 40), the $degrees are the degrees of the angle that we need (e.g. 73),
+ for the $side you can choose between these 4 (top-left, top-right, bottom-right and bottom-left), 
+ and the color is the color of your choosing.
+
+ e.g. .triangle {
+        @include triangle-responsive(40vw, 73, bottom-left, purple);
+      } 
+       
+*/
+@mixin triangle-responsive($width, $degrees, $side, $color) {
+  display: block;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  $pi: 3.14159;
+
+  $angle: $degrees *  0.01745329;
+  $height: tan($angle) * $width;
+
+  @if $side == top-left {
+    border-color: $color transparent transparent transparent;
+    border-width: $height $width 0 0;
+  }
+
+  @if $side == top-right {
+    border-color: transparent $color transparent transparent;
+    border-width: 0 $width $height 0;
+  }
+
+  @if $side == bottom-right {
+    border-color: transparent transparent $color transparent;
+    border-width: 0 0 $height $width;
+  }
+
+  @if $side == bottom-left {
+    border-color: transparent transparent transparent $color;
+    border-width: $height 0 0 $width;
+  }
+}
+
+
+@mixin triangle ($size, $color, $direction) {
+  height: 0;
+  width: 0;
+
+  @if ($direction == up) or ($direction == down) or ($direction == right) or ($direction == left) {
+    border-color: transparent;
+    border-style: solid;
+    border-width: $size / 2;
+
+    @if $direction == up {
+      border-bottom-color: $color;
+
+    } @else if $direction == right {
+      border-left-color:   $color;
+
+    } @else if $direction == down {
+      border-top-color:    $color;
+
+    } @else if $direction == left {
+      border-right-color:  $color;
+    }
+  }
+
+  @else if ($direction == up-right) or ($direction == up-left) {
+    border-top: $size solid $color;
+
+    @if $direction == up-right {
+      border-left:  $size solid transparent;
+
+    } @else if $direction == up-left {
+      border-right: $size solid transparent;
+    }
+  }
+
+  @else if ($direction == down-right) or ($direction == down-left) {
+    border-bottom: $size solid $color;
+
+    @if $direction == down-right {
+      border-left:  $size solid transparent;
+
+    } @else if $direction == down-left {
+      border-right: $size solid transparent;
+    }
+  }
+}
+
+// Card triangles - responsive
+@mixin triangle-header ($angle, $bgr) {
+  position: absolute;
+  background: $bgr;
+  // height: 136.397023%;
+  width: 100%;
+  transform: skewY($angle);
+  z-index: 0;
+  opacity: 1;
+  right: 0;
+
+  @if $angle < 0 {
+    transform-origin: 0 0;
+  } @else if {
+    transform-origin: 100% 0;
+  }
+  
+  // Magic starts here
+  $pi: 3.14159;
+
+  $angle: $angle *  0.01745329;
+  $a: tan($angle) * 100 + 100%;
+  height: $a;
+  bottom: calc(100% - $a);
+  
+}
+
+
+//USE @extend %group; instead if you can!
+@mixin clearfix() {
+	*zoom: 1;
+	&:before, &:after { content: ""; display: table; }
+	&:after { clear: both; }
+}
+
+
+@mixin breakpoint($point) {
+	@if $point == mobile {
+		@media only screen and (min-width: #{$xs}) { @content; }
+	}
+
+	@if $point == tablet {
+		@media only screen and (min-width: #{$sm}) { @content; }
+	}
+	@else if $point == desktop {
+		@media only screen and (min-width: #{$md}) { @content; }
+	}
+	@else if $point == wide {
+		@media only screen and (min-width: #{$wide}) { @content; }
+	}
+}
+
+
+// Transition effects
+@mixin trans {
+	-webkit-transition: all .2s cubic-bezier(0.25, 0.1, 0.25, 1);
+			transition: all .2s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+
+// Alignment
+@mixin center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+@mixin center-h {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+@mixin center-v {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}

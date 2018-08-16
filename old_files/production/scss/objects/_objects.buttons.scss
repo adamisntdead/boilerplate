@@ -1,0 +1,46 @@
+/*------------------------------------
+    @OBJECTS #BUTTONS
+------------------------------------*/
+
+button {
+    border-radius: 0;
+    &,
+    &:focus,
+    &:active {
+        outline: none !important;
+        border: none;
+        @include trans;
+    }
+
+    &:focus,
+    &:active {
+        background-color: inherit;
+    }
+}
+
+.btn {
+    -webkit-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
+
+    display: inline-block;
+    vertical-align: middle;
+    font: inherit;
+    text-align: center;
+    cursor: pointer;
+    overflow: visible;
+    border: none;
+    padding: 10px 20px;
+    background-color: #eee;
+    @include trans;
+    border-radius: $border-radius;
+    
+
+    &,
+    &:hover,
+    &:active,
+    &:focus {
+        text-decoration: none;
+    }
+}

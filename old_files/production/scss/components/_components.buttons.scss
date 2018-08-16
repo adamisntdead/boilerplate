@@ -1,0 +1,32 @@
+/*------------------------------------
+    @COMPONENTS #BUTTONS
+------------------------------------*/
+
+.btn--primary {
+	background-color: $primary;
+	color: #fff;
+	padding: 24px 98px;
+	font-size: 24px;
+
+	&:focus,
+	&:hover {
+		background-color: lighten($primary,10);
+	}
+}
+
+.btn--alt {
+	background-color: #fff;
+	color: $primary;
+
+	&:hover,
+	&:focus {
+		background-color: $primary;
+		color: #fff;
+	}
+}
+
+
+.btn--sm {
+	font-size: 18px;
+	padding: 14px 60px;
+}

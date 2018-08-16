@@ -1,0 +1,48 @@
+/*------------------------------------
+	@TRUMPS #TYPE
+------------------------------------*/
+
+.type-sm {
+	font-size: ($font-size / 1.4);
+}
+.type-md {
+	font-size: ($font-size / 1.2);
+}
+
+//TYPE WEIGHTS
+.type-light {
+    font-weight: 300 !important;
+}
+
+.type-normal {
+    font-weight: 400 !important;
+}
+
+.type-semibold {
+    font-weight: 600 !important;
+}
+
+.type-bold {
+    font-weight: 700 !important;
+}
+
+.type-extrabold {
+    font-weight: 800 !important;
+}
+
+//TYPE TRANSFORMS
+.type-uppercase {
+    text-transform: uppercase !important;
+}
+
+.type-lowercase {
+    text-transform: lowercase !important;
+}
+
+.type-capitalize {
+    text-transform: capitalize !important;
+}
+
+.type-no-transform {
+    text-transform: none !important;
+}
