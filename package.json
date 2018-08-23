@@ -37,6 +37,9 @@
     "tinyify": "^2.4.3"
   },
   "dependencies": {
-    "jquery": "^3.3.1"
+    "jquery": "^3.3.1",
+    "jquery-match-height": "^0.7.2",
+    "jquery-sticky": "^1.0.4",
+    "plyr": "^2.0.18"
   }
 }

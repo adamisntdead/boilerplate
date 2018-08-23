@@ -60,7 +60,7 @@ const settings = {
   },
   js: {
     source: './src/js/**/*.js',
-    entry: './src/js/main.js',
+    entry: './src/js/entry.js',
     dest: './dist/js'
   }
 }
@@ -306,7 +306,7 @@ gulp.task('default', gulp.series(gulp.parallel('css', 'js', 'move'), 'html', 'im
 //   Task: Dev
 // -------------------------------------
 
-gulp.task('dev', gulp.parallel('css:dev', 'html:dev', 'js:dev', 'move', 'images:dev'))
+gulp.task('dev', gulp.series(gulp.parallel('css:dev', 'js:dev', 'move'), 'html:dev', 'images:dev'))
 
 // -------------------------------------
 //   Task: Watch
